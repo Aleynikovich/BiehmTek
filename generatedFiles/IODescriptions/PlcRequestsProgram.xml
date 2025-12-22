@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Automatically generated IO group description. Please do NOT modify!
+-->
+<SunriseIOGroupDescription xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0">
+  <IOGroup DisplayName="PlcRequestsProgram" IconName="PlcRequestsProgram" SignalTypes="InOut" TemplateName="PlcRequestsProgram">
+    <IOs>
+      <DigitalIOItem Name="ProgramStop" DataType="BOOL" IOType="Input" UsedBitWidth="1" IsConnected="false">
+        <Description />
+      </DigitalIOItem>
+      <DigitalIOItem Name="ProgramAbort" DataType="BOOL" IOType="Input" UsedBitWidth="1" IsConnected="false">
+        <Description />
+      </DigitalIOItem>
+      <DigitalIOItem Name="ProgramStart" DataType="BOOL" IOType="Input" UsedBitWidth="1" IsConnected="false">
+        <Description />
+      </DigitalIOItem>
+    </IOs>
+    <Description />
+  </IOGroup>
+</SunriseIOGroupDescription>

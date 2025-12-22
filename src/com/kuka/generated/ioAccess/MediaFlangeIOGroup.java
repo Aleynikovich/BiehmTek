@@ -12,7 +12,7 @@ import com.kuka.roboticsAPI.ioModel.IOTypes;
  * <i>Please, do not modify!</i>
  * <p>
  * <b>I/O group description:</b><br>
- * This I/O Group contains the In-/Outputs for the Media-Flange IO.
+ * ./.
  */
 @Singleton
 public class MediaFlangeIOGroup extends AbstractIOGroup
@@ -29,182 +29,18 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	{
 		super(controller, "MediaFlange");
 
-		addInput("Input1", IOTypes.BOOLEAN, 1);
-		addInput("Input2", IOTypes.BOOLEAN, 1);
-		addInput("Input3", IOTypes.BOOLEAN, 1);
-		addInput("Input4", IOTypes.BOOLEAN, 1);
-		addInput("Input5", IOTypes.BOOLEAN, 1);
-		addInput("Input6", IOTypes.BOOLEAN, 1);
-		addInput("Input7", IOTypes.BOOLEAN, 1);
-		addInput("Input8", IOTypes.BOOLEAN, 1);
-		addDigitalOutput("Output1", IOTypes.BOOLEAN, 1);
-		addDigitalOutput("Output2", IOTypes.BOOLEAN, 1);
-		addDigitalOutput("Output3", IOTypes.BOOLEAN, 1);
-		addDigitalOutput("Output4", IOTypes.BOOLEAN, 1);
+		addDigitalOutput("Gripper1_Open", IOTypes.BOOLEAN, 1);
+		addDigitalOutput("Gripper2_Open", IOTypes.BOOLEAN, 1);
+		addDigitalOutput("Gripper1_Close", IOTypes.BOOLEAN, 1);
+		addDigitalOutput("Gripper2_Close", IOTypes.BOOLEAN, 1);
+		addInput("Gripper1_isOpen", IOTypes.BOOLEAN, 1);
+		addInput("Gripper2_isOpen", IOTypes.BOOLEAN, 1);
+		addInput("Gripper1_isClosed", IOTypes.BOOLEAN, 1);
+		addInput("Gripper2_isClosed", IOTypes.BOOLEAN, 1);
 	}
 
 	/**
-	 * Gets the value of the <b>digital input '<i>Input1</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input1'
-	 */
-	public boolean getInput1()
-	{
-		return getBooleanIOValue("Input1", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input2</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input2'
-	 */
-	public boolean getInput2()
-	{
-		return getBooleanIOValue("Input2", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input3</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input3'
-	 */
-	public boolean getInput3()
-	{
-		return getBooleanIOValue("Input3", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input4</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input4'
-	 */
-	public boolean getInput4()
-	{
-		return getBooleanIOValue("Input4", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input5</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input5'
-	 */
-	public boolean getInput5()
-	{
-		return getBooleanIOValue("Input5", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input6</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input6'
-	 */
-	public boolean getInput6()
-	{
-		return getBooleanIOValue("Input6", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input7</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input7'
-	 */
-	public boolean getInput7()
-	{
-		return getBooleanIOValue("Input7", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital input '<i>Input8</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital input
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital input 'Input8'
-	 */
-	public boolean getInput8()
-	{
-		return getBooleanIOValue("Input8", false);
-	}
-
-	/**
-	 * Gets the value of the <b>digital output '<i>Output1</i>'</b>.<br>
+	 * Gets the value of the <b>digital output '<i>Gripper1_Open</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -216,15 +52,15 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * <b>Range of the I/O value:</b><br>
 	 * [false; true]
 	 *
-	 * @return current value of the digital output 'Output1'
+	 * @return current value of the digital output 'Gripper1_Open'
 	 */
-	public boolean getOutput1()
+	public boolean getGripper1_Open()
 	{
-		return getBooleanIOValue("Output1", true);
+		return getBooleanIOValue("Gripper1_Open", true);
 	}
 
 	/**
-	 * Sets the value of the <b>digital output '<i>Output1</i>'</b>.<br>
+	 * Sets the value of the <b>digital output '<i>Gripper1_Open</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -237,15 +73,15 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * [false; true]
 	 *
 	 * @param value
-	 *            the value, which has to be written to the digital output 'Output1'
+	 *            the value, which has to be written to the digital output 'Gripper1_Open'
 	 */
-	public void setOutput1(java.lang.Boolean value)
+	public void setGripper1_Open(java.lang.Boolean value)
 	{
-		setDigitalOutput("Output1", value);
+		setDigitalOutput("Gripper1_Open", value);
 	}
 
 	/**
-	 * Gets the value of the <b>digital output '<i>Output2</i>'</b>.<br>
+	 * Gets the value of the <b>digital output '<i>Gripper2_Open</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -257,56 +93,15 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * <b>Range of the I/O value:</b><br>
 	 * [false; true]
 	 *
-	 * @return current value of the digital output 'Output2'
+	 * @return current value of the digital output 'Gripper2_Open'
 	 */
-	public boolean getOutput2()
+	public boolean getGripper2_Open()
 	{
-		return getBooleanIOValue("Output2", true);
+		return getBooleanIOValue("Gripper2_Open", true);
 	}
 
 	/**
-	 * Sets the value of the <b>digital output '<i>Output2</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital output
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @param value
-	 *            the value, which has to be written to the digital output 'Output2'
-	 */
-	public void setOutput2(java.lang.Boolean value)
-	{
-		setDigitalOutput("Output2", value);
-	}
-
-	/**
-	 * Gets the value of the <b>digital output '<i>Output3</i>'</b>.<br>
-	 * <i>This method is automatically generated. Please, do not modify!</i>
-	 * <p>
-	 * <b>I/O direction and type:</b><br>
-	 * digital output
-	 * <p>
-	 * <b>User description of the I/O:</b><br>
-	 * ./.
-	 * <p>
-	 * <b>Range of the I/O value:</b><br>
-	 * [false; true]
-	 *
-	 * @return current value of the digital output 'Output3'
-	 */
-	public boolean getOutput3()
-	{
-		return getBooleanIOValue("Output3", true);
-	}
-
-	/**
-	 * Sets the value of the <b>digital output '<i>Output3</i>'</b>.<br>
+	 * Sets the value of the <b>digital output '<i>Gripper2_Open</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -319,15 +114,15 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * [false; true]
 	 *
 	 * @param value
-	 *            the value, which has to be written to the digital output 'Output3'
+	 *            the value, which has to be written to the digital output 'Gripper2_Open'
 	 */
-	public void setOutput3(java.lang.Boolean value)
+	public void setGripper2_Open(java.lang.Boolean value)
 	{
-		setDigitalOutput("Output3", value);
+		setDigitalOutput("Gripper2_Open", value);
 	}
 
 	/**
-	 * Gets the value of the <b>digital output '<i>Output4</i>'</b>.<br>
+	 * Gets the value of the <b>digital output '<i>Gripper1_Close</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -339,15 +134,15 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * <b>Range of the I/O value:</b><br>
 	 * [false; true]
 	 *
-	 * @return current value of the digital output 'Output4'
+	 * @return current value of the digital output 'Gripper1_Close'
 	 */
-	public boolean getOutput4()
+	public boolean getGripper1_Close()
 	{
-		return getBooleanIOValue("Output4", true);
+		return getBooleanIOValue("Gripper1_Close", true);
 	}
 
 	/**
-	 * Sets the value of the <b>digital output '<i>Output4</i>'</b>.<br>
+	 * Sets the value of the <b>digital output '<i>Gripper1_Close</i>'</b>.<br>
 	 * <i>This method is automatically generated. Please, do not modify!</i>
 	 * <p>
 	 * <b>I/O direction and type:</b><br>
@@ -360,11 +155,132 @@ public class MediaFlangeIOGroup extends AbstractIOGroup
 	 * [false; true]
 	 *
 	 * @param value
-	 *            the value, which has to be written to the digital output 'Output4'
+	 *            the value, which has to be written to the digital output 'Gripper1_Close'
 	 */
-	public void setOutput4(java.lang.Boolean value)
+	public void setGripper1_Close(java.lang.Boolean value)
 	{
-		setDigitalOutput("Output4", value);
+		setDigitalOutput("Gripper1_Close", value);
+	}
+
+	/**
+	 * Gets the value of the <b>digital output '<i>Gripper2_Close</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital output
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @return current value of the digital output 'Gripper2_Close'
+	 */
+	public boolean getGripper2_Close()
+	{
+		return getBooleanIOValue("Gripper2_Close", true);
+	}
+
+	/**
+	 * Sets the value of the <b>digital output '<i>Gripper2_Close</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital output
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @param value
+	 *            the value, which has to be written to the digital output 'Gripper2_Close'
+	 */
+	public void setGripper2_Close(java.lang.Boolean value)
+	{
+		setDigitalOutput("Gripper2_Close", value);
+	}
+
+	/**
+	 * Gets the value of the <b>digital input '<i>Gripper1_isOpen</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital input
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @return current value of the digital input 'Gripper1_isOpen'
+	 */
+	public boolean getGripper1_isOpen()
+	{
+		return getBooleanIOValue("Gripper1_isOpen", false);
+	}
+
+	/**
+	 * Gets the value of the <b>digital input '<i>Gripper2_isOpen</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital input
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @return current value of the digital input 'Gripper2_isOpen'
+	 */
+	public boolean getGripper2_isOpen()
+	{
+		return getBooleanIOValue("Gripper2_isOpen", false);
+	}
+
+	/**
+	 * Gets the value of the <b>digital input '<i>Gripper1_isClosed</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital input
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @return current value of the digital input 'Gripper1_isClosed'
+	 */
+	public boolean getGripper1_isClosed()
+	{
+		return getBooleanIOValue("Gripper1_isClosed", false);
+	}
+
+	/**
+	 * Gets the value of the <b>digital input '<i>Gripper2_isClosed</i>'</b>.<br>
+	 * <i>This method is automatically generated. Please, do not modify!</i>
+	 * <p>
+	 * <b>I/O direction and type:</b><br>
+	 * digital input
+	 * <p>
+	 * <b>User description of the I/O:</b><br>
+	 * ./.
+	 * <p>
+	 * <b>Range of the I/O value:</b><br>
+	 * [false; true]
+	 *
+	 * @return current value of the digital input 'Gripper2_isClosed'
+	 */
+	public boolean getGripper2_isClosed()
+	{
+		return getBooleanIOValue("Gripper2_isClosed", false);
 	}
 
 }

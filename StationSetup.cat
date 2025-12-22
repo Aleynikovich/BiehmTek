@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ConfigurationProject>
     <TopologyItem itemPath="com.kuka/Project" name="Project" selectedVersion="1" uniqueID="">
-        <TopologyItem itemPath="com.kuka/ControllerLBR5" name="KUKA_Sunrise_Cabinet_1" selectedVersion="1" uniqueID="cdb52cf2-8b81-4ca9-8d45-bd5654998b54">
+        <TopologyItem itemPath="com.kuka/ControllerLBR5" name="Sunrise" selectedVersion="1" uniqueID="cdb52cf2-8b81-4ca9-8d45-bd5654998b54">
             <Interface id="com.kuka/ControllerLBR5/Controller" version="0.1.0"/>
             <Interface id="com.kuka/Controller/USB" version="0.2.0"/>
             <Interface id="com.kuka/Controller/EtherCATCTRLBUS" version="0.1.0"/>
@@ -11,7 +11,7 @@
             <Interface id="com.kuka/Controller/EtherCAT" version="0.1.0"/>
             <Interface id="com.kuka/Controller/Windows" version="0.1.18"/>
             <Interface id="com.kuka/Controller/Controller" version="0.1.0"/>
-            <TopologyItem itemPath="com.kuka/LBR5_14kg" name="LBR_iiwa_14_R820_1" selectedVersion="2" uniqueID="7079febc-788c-4470-972c-843f68046c35">
+            <TopologyItem itemPath="com.kuka/LBR5_14kg" name="iiwa" selectedVersion="2" uniqueID="7079febc-788c-4470-972c-843f68046c35">
                 <Interface id="com.kuka/LBR5/LBRHardware" version="0.1.0"/>
                 <Interface id="com.kuka/LBR/LBR5" version="0.1.0"/>
                 <Interface id="com.kuka/LBR/Flansch" version="0.1.0"/>
@@ -21,7 +21,7 @@
                 <Interface id="com.kuka/LBR5/LBRiiwaHardware" version="0.1.0"/>
                 <Interface id="com.kuka/Robot/Robot" version="0.1.0"/>
                 <Property displayName="userName" key="userName" type="String">
-                    <Value>LBR_iiwa_14_R820_1</Value>
+                    <Value>iiwa</Value>
                 </Property>
                 <Property displayName="Medien-Flansch" key="MAM" showInEditor="true" showInWizard="true" type="String">
                     <Value displayName="Medien-Flansch IO pneumatisch">MADA=MF&amp;IOConfig=MFIO</Value>
@@ -738,7 +738,7 @@
                 <Interface id="com.kuka/OSGi/com.kuka.task.provider.pause" version="1.0.0"/>
             </SoftwareItem>
             <Property displayName="userName" key="userName" type="String">
-                <Value>KUKA_Sunrise_Cabinet_1</Value>
+                <Value>Sunrise</Value>
             </Property>
             <Property displayName="IP" key="IP" showInEditor="true" type="String">
                 <Value>172.31.1.147</Value>

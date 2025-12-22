@@ -6,12 +6,67 @@
   </Version>
   <WarnMultipleUsageOfInputs printWarning="false" />
   <BusList>
-    <Bus BusDriverName="PNIODriver" BusInstanceName="PNIO-DEV">
+    <Bus BusDriverName="ECatIODriver" BusInstanceName="SYS-X48">
       <IOList>
-        <DigitalIO Name="AutExt.ExtStart" Type="INPUT" Scope="USER_IO" StartBit="144" BitSize="1" Signed="false">
+        <DigitalIO Name="MediaFlange.Gripper1_Open" Type="OUTPUT" Scope="USER_IO" StartBit="12728" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
-        <DigitalIO Name="AutExt.Run" Type="OUTPUT" Scope="USER_IO" StartBit="2320" BitSize="1" Signed="false">
+        <DigitalIO Name="MediaFlange.Gripper1_Close" Type="OUTPUT" Scope="USER_IO" StartBit="12729" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper2_Open" Type="OUTPUT" Scope="USER_IO" StartBit="12730" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper2_Close" Type="OUTPUT" Scope="USER_IO" StartBit="12731" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper1_isOpen" Type="INPUT" Scope="USER_IO" StartBit="368" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper1_isClosed" Type="INPUT" Scope="USER_IO" StartBit="369" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper2_isOpen" Type="INPUT" Scope="USER_IO" StartBit="370" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="MediaFlange.Gripper2_isClosed" Type="INPUT" Scope="USER_IO" StartBit="371" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+      </IOList>
+    </Bus>
+    <Bus BusDriverName="PNIODriver" BusInstanceName="PNIO-DEV">
+      <IOList>
+        <DigitalIO Name="AutomaticExchange.ProgramNumber" Type="INPUT" Scope="USER_IO" StartBit="152" BitSize="16" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.ExternalStop" Type="INPUT" Scope="USER_IO" StartBit="144" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.ExternalStart" Type="INPUT" Scope="USER_IO" StartBit="145" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.ExternalReset" Type="INPUT" Scope="USER_IO" StartBit="146" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotT1" Type="OUTPUT" Scope="USER_IO" StartBit="2320" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotAut" Type="OUTPUT" Scope="USER_IO" StartBit="2321" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotHomed" Type="OUTPUT" Scope="USER_IO" StartBit="2322" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotMoving" Type="OUTPUT" Scope="USER_IO" StartBit="2323" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotStopped" Type="OUTPUT" Scope="USER_IO" StartBit="2324" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotProgramRunning" Type="OUTPUT" Scope="USER_IO" StartBit="2325" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="AutomaticExchange.RobotProgramCompleted" Type="OUTPUT" Scope="USER_IO" StartBit="2326" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
       </IOList>

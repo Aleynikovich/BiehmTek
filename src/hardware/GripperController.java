@@ -1,20 +1,12 @@
 package hardware;
 
-import javax.inject.Inject;
-
 import com.kuka.generated.ioAccess.Gripper1IOGroup;
 import com.kuka.generated.ioAccess.Gripper2IOGroup;
-import com.kuka.roboticsAPI.applicationModel.IApplicationData;
-import com.kuka.roboticsAPI.applicationModel.tasks.ITaskLogger;
-import com.kuka.roboticsAPI.uiModel.userKeys.IUserKey;
-import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyBar;
-import com.kuka.roboticsAPI.uiModel.userKeys.IUserKeyListener;
-import com.kuka.roboticsAPI.uiModel.userKeys.UserKeyAlignment;
-import com.kuka.roboticsAPI.uiModel.userKeys.UserKeyEvent;
 
 /**
- * Controller for Gripper 1 and Gripper 2 with HMI button support.
- * Creates SmartPad buttons for manual gripper control.
+ * Controller for Gripper 1 and Gripper 2.
+ * Provides methods to control grippers via Profinet I/O.
+ * HMI buttons can be added by application using getApplicationData().
  * 
  * Java 1.7 compatible - no lambdas, no diamond operators
  */
@@ -22,104 +14,18 @@ public class GripperController {
     
     private Gripper1IOGroup gripper1IO;
     private Gripper2IOGroup gripper2IO;
-    private ITaskLogger logger;
-    private IApplicationData appData;
-    
-    private IUserKeyBar keyBar;
-    private IUserKey gripper1OpenKey;
-    private IUserKey gripper1CloseKey;
-    private IUserKey gripper2OpenKey;
-    private IUserKey gripper2CloseKey;
+    private ILogger logger;
     
     /**
      * Create gripper controller
      * @param gripper1IO Gripper 1 I/O group
      * @param gripper2IO Gripper 2 I/O group
      * @param logger Task logger
-     * @param appData Application data for HMI access
      */
-    public GripperController(Gripper1IOGroup gripper1IO, Gripper2IOGroup gripper2IO, 
-                            ITaskLogger logger, IApplicationData appData) {
+    public GripperController(Gripper1IOGroup gripper1IO, Gripper2IOGroup gripper2IO, ILogger logger) {
         this.gripper1IO = gripper1IO;
         this.gripper2IO = gripper2IO;
         this.logger = logger;
-        this.appData = appData;
-    }
-    
-    /**
-     * Initialize HMI buttons on SmartPad
-     */
-    public void initializeHMI() {
-        keyBar = appData.getProcessData("GripperControl").getUserKeyBar(UserKeyAlignment.TOP);
-        
-        // Gripper 1 Open button
-        gripper1OpenKey = keyBar.addUserKey(0, "Gripper 1 Open", true);
-        gripper1OpenKey.setEnabled(true);
-        gripper1OpenKey.addUserKeyListener(new IUserKeyListener() {
-            public void onKeyEvent(IUserKey key, UserKeyEvent event) {
-                if (event == UserKeyEvent.KeyDown) {
-                    openGripper1();
-                }
-            }
-        });
-        
-        // Gripper 1 Close button
-        gripper1CloseKey = keyBar.addUserKey(1, "Gripper 1 Close", true);
-        gripper1CloseKey.setEnabled(true);
-        gripper1CloseKey.addUserKeyListener(new IUserKeyListener() {
-            public void onKeyEvent(IUserKey key, UserKeyEvent event) {
-                if (event == UserKeyEvent.KeyDown) {
-                    closeGripper1();
-                }
-            }
-        });
-        
-        // Gripper 2 Open button
-        gripper2OpenKey = keyBar.addUserKey(2, "Gripper 2 Open", true);
-        gripper2OpenKey.setEnabled(true);
-        gripper2OpenKey.addUserKeyListener(new IUserKeyListener() {
-            public void onKeyEvent(IUserKey key, UserKeyEvent event) {
-                if (event == UserKeyEvent.KeyDown) {
-                    openGripper2();
-                }
-            }
-        });
-        
-        // Gripper 2 Close button
-        gripper2CloseKey = keyBar.addUserKey(3, "Gripper 2 Close", true);
-        gripper2CloseKey.setEnabled(true);
-        gripper2CloseKey.addUserKeyListener(new IUserKeyListener() {
-            public void onKeyEvent(IUserKey key, UserKeyEvent event) {
-                if (event == UserKeyEvent.KeyDown) {
-                    closeGripper2();
-                }
-            }
-        });
-        
-        keyBar.publish();
-        logger.info("Gripper HMI buttons initialized");
-    }
-    
-    /**
-     * Remove HMI buttons from SmartPad
-     */
-    public void removeHMI() {
-        if (keyBar != null) {
-            if (gripper1OpenKey != null) {
-                keyBar.removeUserKey(gripper1OpenKey);
-            }
-            if (gripper1CloseKey != null) {
-                keyBar.removeUserKey(gripper1CloseKey);
-            }
-            if (gripper2OpenKey != null) {
-                keyBar.removeUserKey(gripper2OpenKey);
-            }
-            if (gripper2CloseKey != null) {
-                keyBar.removeUserKey(gripper2CloseKey);
-            }
-            keyBar.publish();
-        }
-        logger.info("Gripper HMI buttons removed");
     }
     
     /**

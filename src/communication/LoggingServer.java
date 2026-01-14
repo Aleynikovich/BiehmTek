@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.kuka.roboticsAPI.applicationModel.tasks.ITaskLogger;
+
 
 /**
  * Background task that runs a ServerSocket to stream robot logs to remote Telnet clients.
@@ -22,7 +22,7 @@ public class LoggingServer implements Runnable {
     private ServerSocket serverSocket;
     private List<ClientConnection> clients;
     private AtomicBoolean running;
-    private ITaskLogger logger;
+    private ILogger logger;
     private int port;
     
     /**
@@ -61,7 +61,7 @@ public class LoggingServer implements Runnable {
         }
     }
     
-    public LoggingServer(ITaskLogger logger, int port) {
+    public LoggingServer(ILogger logger, int port) {
         this.logger = logger;
         this.port = port;
         this.clients = new ArrayList<ClientConnection>();

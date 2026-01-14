@@ -2,21 +2,20 @@ package hardware;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.kuka.roboticsAPI.applicationModel.tasks.ITaskLogger;
-import com.kuka.roboticsAPI.ioModel.AbstractIOGroup;
+import com.kuka.generated.ioAccess.RobotStatusIOGroup;
 
 /**
  * Background task that toggles a Profinet heartbeat signal every 100ms.
  * Used to indicate robot is alive to the PLC (cell master).
+ * Uses RobotStatusIOGroup ZRes1 signal as heartbeat by default.
  * 
  * Java 1.7 compatible - no lambdas, no diamond operators
  * Non-blocking - runs in background thread
  */
 public class HeartbeatTask implements Runnable {
     
-    private ITaskLogger logger;
-    private AbstractIOGroup ioGroup;
-    private String signalName;
+    private ILogger logger;
+    private RobotStatusIOGroup robotStatusIO;
     private int intervalMs;
     
     private AtomicBoolean running;
@@ -24,16 +23,14 @@ public class HeartbeatTask implements Runnable {
     private Thread backgroundThread;
     
     /**
-     * Create a heartbeat task
+     * Create a heartbeat task using ZRes1 signal
      * @param logger Task logger for debug output
-     * @param ioGroup I/O group containing the heartbeat signal
-     * @param signalName Name of the boolean output signal to toggle
+     * @param robotStatusIO RobotStatus I/O group
      * @param intervalMs Toggle interval in milliseconds (default: 100ms)
      */
-    public HeartbeatTask(ITaskLogger logger, AbstractIOGroup ioGroup, String signalName, int intervalMs) {
+    public HeartbeatTask(ILogger logger, RobotStatusIOGroup robotStatusIO, int intervalMs) {
         this.logger = logger;
-        this.ioGroup = ioGroup;
-        this.signalName = signalName;
+        this.robotStatusIO = robotStatusIO;
         this.intervalMs = intervalMs;
         
         this.running = new AtomicBoolean(false);
@@ -53,10 +50,10 @@ public class HeartbeatTask implements Runnable {
         
         backgroundThread = new Thread(this);
         backgroundThread.setDaemon(true);
-        backgroundThread.setName("HeartbeatTask-" + signalName);
+        backgroundThread.setName("HeartbeatTask-ZRes1");
         backgroundThread.start();
         
-        logger.info("HeartbeatTask started for signal: " + signalName + " (interval: " + intervalMs + "ms)");
+        logger.info("HeartbeatTask started (ZRes1, interval: " + intervalMs + "ms)");
     }
     
     /**
@@ -87,8 +84,8 @@ public class HeartbeatTask implements Runnable {
                 boolean newState = !currentState.get();
                 currentState.set(newState);
                 
-                // Write to I/O signal
-                ioGroup.setDigitalOutput(signalName, Boolean.valueOf(newState));
+                // Write to heartbeat signal (ZRes1)
+                robotStatusIO.setZRes1(Boolean.valueOf(newState));
                 
                 // Sleep for the interval
                 Thread.sleep(intervalMs);
@@ -106,7 +103,7 @@ public class HeartbeatTask implements Runnable {
         
         // Set to false on exit
         try {
-            ioGroup.setDigitalOutput(signalName, Boolean.valueOf(false));
+            robotStatusIO.setZRes1(Boolean.valueOf(false));
         } catch (Exception e) {
             logger.error("Failed to reset heartbeat signal: " + e.getMessage());
         }

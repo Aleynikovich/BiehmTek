@@ -1,7 +1,6 @@
 package hardware;
 
 import com.kuka.generated.ioAccess.PlcRequestsGrippersIOGroup;
-import com.kuka.roboticsAPI.applicationModel.tasks.ITaskLogger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -14,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MeasurementGripperController implements Runnable {
     
     private PlcRequestsGrippersIOGroup plcRequestsIO;
-    private ITaskLogger logger;
+    private ILogger logger;
     
     private AtomicBoolean monitoring;
     private Thread monitorThread;
@@ -34,7 +33,7 @@ public class MeasurementGripperController implements Runnable {
      * @param plcRequestsIO PLC requests I/O group
      * @param logger Task logger
      */
-    public MeasurementGripperController(PlcRequestsGrippersIOGroup plcRequestsIO, ITaskLogger logger) {
+    public MeasurementGripperController(PlcRequestsGrippersIOGroup plcRequestsIO, ILogger logger) {
         this.plcRequestsIO = plcRequestsIO;
         this.logger = logger;
         this.monitoring = new AtomicBoolean(false);

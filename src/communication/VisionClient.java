@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.kuka.roboticsAPI.applicationModel.tasks.ITaskLogger;
-
 /**
  * Background TCP client task for vision system communication.
  * Connects to vision system and continuously reads incoming frames in the background.
@@ -22,7 +20,7 @@ public class VisionClient implements Runnable {
     private Socket clientSocket;
     private BufferedReader reader;
     private DataOutputStream writer;
-    private ITaskLogger logger;
+    private ILogger logger;
     
     private String serverIp;
     private int serverPort;
@@ -37,7 +35,7 @@ public class VisionClient implements Runnable {
     
     private Thread backgroundThread;
     
-    public VisionClient(ITaskLogger logger, String serverIp, int serverPort, String delimiter) {
+    public VisionClient(ILogger logger, String serverIp, int serverPort, String delimiter) {
         this.logger = logger;
         this.serverIp = serverIp;
         this.serverPort = serverPort;

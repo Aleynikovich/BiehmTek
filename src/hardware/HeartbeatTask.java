@@ -87,7 +87,7 @@ public class HeartbeatTask implements Runnable {
                 currentState.set(newState);
                 
                 // Write to heartbeat signal (ZRes1)
-                robotStatusIO.setZRes1(Boolean.valueOf(newState));
+                robotStatusIO.setZRes1(newState);
                 
                 // Sleep for the interval
                 Thread.sleep(intervalMs);
@@ -105,7 +105,7 @@ public class HeartbeatTask implements Runnable {
         
         // Set to false on exit
         try {
-            robotStatusIO.setZRes1(Boolean.valueOf(false));
+            robotStatusIO.setZRes1(false);
         } catch (Exception e) {
             logger.error("Failed to reset heartbeat signal: " + e.getMessage());
         }

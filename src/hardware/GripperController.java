@@ -34,8 +34,8 @@ public class GripperController {
      * Open Gripper 1
      */
     public void openGripper1() {
-        gripper1IO.setClose(Boolean.valueOf(false));
-        gripper1IO.setOpen(Boolean.valueOf(true));
+        gripper1IO.setClose(false);
+        gripper1IO.setOpen(true);
         logger.info("Gripper 1: OPEN");
     }
     
@@ -43,8 +43,8 @@ public class GripperController {
      * Close Gripper 1
      */
     public void closeGripper1() {
-        gripper1IO.setOpen(Boolean.valueOf(false));
-        gripper1IO.setClose(Boolean.valueOf(true));
+        gripper1IO.setOpen(false);
+        gripper1IO.setClose(true);
         logger.info("Gripper 1: CLOSE");
     }
     
@@ -52,8 +52,8 @@ public class GripperController {
      * Open Gripper 2
      */
     public void openGripper2() {
-        gripper2IO.setClose(Boolean.valueOf(false));
-        gripper2IO.setOpen(Boolean.valueOf(true));
+        gripper2IO.setClose(false);
+        gripper2IO.setOpen(true);
         logger.info("Gripper 2: OPEN");
     }
     
@@ -61,8 +61,8 @@ public class GripperController {
      * Close Gripper 2
      */
     public void closeGripper2() {
-        gripper2IO.setOpen(Boolean.valueOf(false));
-        gripper2IO.setClose(Boolean.valueOf(true));
+        gripper2IO.setOpen(false);
+        gripper2IO.setClose(true);
         logger.info("Gripper 2: CLOSE");
     }
     

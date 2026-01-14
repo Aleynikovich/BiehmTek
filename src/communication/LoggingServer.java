@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import common.ILogger;
 
-
-
 /**
  * Background task that runs a ServerSocket to stream robot logs to remote Telnet clients.
  * Implements a broadcast server where multiple clients can connect and receive log messages.

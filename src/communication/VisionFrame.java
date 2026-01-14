@@ -26,7 +26,7 @@ public class VisionFrame {
     
     /**
      * Parse vision system data string into frame components
-     * Expected format from legacy system: "type,timestamp,x,y,z,alpha,beta,gamma"
+     * Expected format from legacy system: "type,timestamp,reserved,reserved,reserved,x,y,z,gamma,beta,alpha"
      * 
      * @param datagram Raw data string from vision system
      * @param delimiter Field delimiter (e.g., "," or ";")
@@ -49,9 +49,9 @@ public class VisionFrame {
             // Parse operation type (first field)
             this.operationType = tokens[0];
             
-            // Parse coordinate data if present (legacy format: 8 fields total)
+            // Parse coordinate data if present (legacy format: fields 5-10 contain x,y,z,gamma,beta,alpha)
+            // Field layout: [0:type, 1-4:reserved, 5:x, 6:y, 7:z, 8:gamma, 9:beta, 10:alpha]
             if (tokens.length >= 8) {
-                // Fields 5-10 contain x,y,z,gamma,beta,alpha (from legacy code line 736-741)
                 this.x = Double.parseDouble(tokens[5]);
                 this.y = Double.parseDouble(tokens[6]);
                 this.z = Double.parseDouble(tokens[7]);

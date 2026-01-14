@@ -14,6 +14,8 @@ import common.ILogger;
  */
 public class MeasurementGripperController implements Runnable {
     
+    private static final int POLL_INTERVAL_MS = 50;
+    
     private PlcRequestsGrippersIOGroup plcRequestsIO;
     private ILogger logger;
     
@@ -130,8 +132,8 @@ public class MeasurementGripperController implements Runnable {
                 prevGripper2Open = g2Open;
                 prevGripper2Close = g2Close;
                 
-                // Poll at 50ms intervals (20Hz)
-                Thread.sleep(50);
+                // Poll at configured interval
+                Thread.sleep(POLL_INTERVAL_MS);
                 
             } catch (InterruptedException e) {
                 if (monitoring.get()) {

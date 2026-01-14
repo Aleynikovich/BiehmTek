@@ -10,7 +10,7 @@ This is a KUKA LBR iiwa 14 R820 industrial robotics project using the KUKA Sunri
 - No Java 8+ features (lambdas, streams, Optional, try-with-resources, etc.)
 - No method references or default interface methods
 - Use explicit generic type parameters (no diamond operator <>)
-- Documentation reference: `/Documentation/KUKA_SunriseOS_116_END_en.pdf`
+- Documentation and examples reference: `/Documentation/KUKA_SunriseOS_116_END_en.pdf`
 
 ### KUKA Robotics API
 - Base application classes extend `RoboticsAPIApplication`

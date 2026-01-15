@@ -1,6 +1,11 @@
 package biemhTekniker;
 
-import biemhTekniker.MeasurementGripperController.PlcRequestListener;
+import biemhTekniker.IO.GripperController;
+import biemhTekniker.IO.HmiButtonHandler;
+import biemhTekniker.IO.MeasurementGripperController;
+import biemhTekniker.IO.MeasurementGripperController.PlcRequestListener;
+import biemhTekniker.logger.LoggingServer;
+import biemhTekniker.vision.VisionClient;
 import com.kuka.generated.ioAccess.Gripper1IOGroup;
 import com.kuka.generated.ioAccess.Gripper2IOGroup;
 import com.kuka.generated.ioAccess.PlcRequestsGrippersIOGroup;
@@ -22,34 +27,22 @@ import static com.kuka.roboticsAPI.motionModel.BasicMotions.ptpHome;
 @SuppressWarnings("unused")
 public class Main extends RoboticsAPIApplication
 {
-
     @Inject
     private LBR iiwa;
-
     @Inject
     private Controller controller;
-
     @Inject
     private RobotStatusIOGroup robotStatusIO;
-
     @Inject
     private Gripper1IOGroup gripper1IO;
-
     @Inject
     private Gripper2IOGroup gripper2IO;
-
     @Inject
     private PlcRequestsGrippersIOGroup plcRequestsIO;
-
-    @Inject
-    private HeartbeatTask heartbeat;
-
     @Inject
     private LoggingServer logServer;
-
     @Inject
     private VisionClient visionClient;
-
     @Inject
     private MeasurementGripperController mmGripperController;
 

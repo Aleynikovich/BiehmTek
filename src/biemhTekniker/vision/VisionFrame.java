@@ -1,4 +1,4 @@
-package biemhTekniker;
+package biemhTekniker.vision;
 
 import com.kuka.roboticsAPI.geometricModel.Frame;
 

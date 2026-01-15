@@ -1,4 +1,4 @@
-package biemhTekniker;
+package biemhTekniker.IO;
 
 import com.kuka.generated.ioAccess.PlcRequestsGrippersIOGroup;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;

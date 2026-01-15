@@ -1,4 +1,4 @@
-package biemhTekniker;
+package biemhTekniker.logger;
 
 import com.kuka.roboticsAPI.applicationModel.tasks.CycleBehavior;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPICyclicBackgroundTask;

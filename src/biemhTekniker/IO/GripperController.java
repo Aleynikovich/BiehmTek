@@ -1,4 +1,4 @@
-package biemhTekniker;
+package biemhTekniker.IO;
 
 import com.kuka.generated.ioAccess.Gripper1IOGroup;
 import com.kuka.generated.ioAccess.Gripper2IOGroup;

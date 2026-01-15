@@ -124,9 +124,19 @@ public class LoggingServer extends RoboticsAPICyclicBackgroundTask {
     
     @Override
     public void runCyclic() {
-        // Cyclic task for periodic operations
-        // Currently no periodic broadcasting, but structure is in place
-        // for future enhancements like periodic heartbeat messages
+        // Periodic cleanup of disconnected clients
+        synchronized (clients) {
+            List<ClientConnection> disconnected = new ArrayList<ClientConnection>();
+            for (ClientConnection client : clients) {
+                if (!client.isConnected()) {
+                    disconnected.add(client);
+                }
+            }
+            for (ClientConnection client : disconnected) {
+                client.close();
+                clients.remove(client);
+            }
+        }
     }
     
     public void stopServer() {

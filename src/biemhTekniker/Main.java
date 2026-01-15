@@ -55,6 +55,7 @@ public class Main extends RoboticsAPIApplication {
 	
 	private ConfigManager config;
 	private GripperController gripperController;
+	private HmiButtonHandler hmiButtonHandler;
 	private IUserKeyBar hmiKeyBar;
 
 	@Override
@@ -134,8 +135,8 @@ public class Main extends RoboticsAPIApplication {
 			this.hmiKeyBar = getApplicationUI().createUserKeyBar("BiemhTek_HMI");
 			
 			// Create button handler and register keys
-			HmiButtonHandler buttonHandler = new HmiButtonHandler(gripperController);
-			buttonHandler.registerUserKeys(this.hmiKeyBar);
+			this.hmiButtonHandler = new HmiButtonHandler(gripperController);
+			this.hmiButtonHandler.registerUserKeys(this.hmiKeyBar);
 			
 			getLogger().info("HMI programmable buttons initialized successfully");
 		} catch (Exception e) {

@@ -1,12 +1,10 @@
-package communication;
+package biemhTekniker;
 
 import com.kuka.roboticsAPI.geometricModel.Frame;
 
 /**
  * Data class representing a frame received from the vision system.
- * Parses incoming string data into structured robot frame coordinates.
- * 
- * Java 1.7 compatible - no lambdas, no diamond operators
+ * Parses incoming string data into structured coordinates.
  */
 public class VisionFrame {
     
@@ -25,12 +23,8 @@ public class VisionFrame {
     }
     
     /**
-     * Parse vision system data string into frame components
-     * Expected format from legacy system: "type,timestamp,reserved,reserved,reserved,x,y,z,gamma,beta,alpha"
-     * 
-     * @param datagram Raw data string from vision system
-     * @param delimiter Field delimiter (e.g., "," or ";")
-     * @return true if parsing successful, false otherwise
+     * Parse vision system data string into frame components.
+     * Expected format: "type,timestamp,reserved,reserved,reserved,x,y,z,gamma,beta,alpha"
      */
     public boolean parseFromString(String datagram, String delimiter) {
         if (datagram == null || datagram.isEmpty()) {
@@ -46,17 +40,13 @@ public class VisionFrame {
                 return false;
             }
             
-            // Parse operation type (first field)
             this.operationType = tokens[0];
             
-            // Parse coordinate data if present (legacy format: fields 5-10 contain x,y,z,gamma,beta,alpha)
-            // Field layout: [0:type, 1-4:reserved, 5:x, 6:y, 7:z, 8:gamma, 9:beta, 10:alpha]
             if (tokens.length >= 8) {
                 this.x = Double.parseDouble(tokens[5]);
                 this.y = Double.parseDouble(tokens[6]);
                 this.z = Double.parseDouble(tokens[7]);
                 
-                // Rotation angles
                 if (tokens.length >= 11) {
                     this.gamma = Double.parseDouble(tokens[8]);
                     this.beta = Double.parseDouble(tokens[9]);
@@ -80,11 +70,6 @@ public class VisionFrame {
         }
     }
     
-    /**
-     * Convert parsed data to KUKA Frame object
-     * @param baseFrame Base frame to copy from (e.g., /BinPicking)
-     * @return Frame object with parsed coordinates
-     */
     public Frame toKukaFrame(Frame baseFrame) {
         Frame result = new Frame(baseFrame);
         if (this.valid) {
@@ -97,8 +82,6 @@ public class VisionFrame {
         }
         return result;
     }
-    
-    // Getters
     
     public String getOperationType() {
         return operationType;

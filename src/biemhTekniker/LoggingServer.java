@@ -1,4 +1,4 @@
-package communication;
+package biemhTekniker;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,26 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import common.ILogger;
+import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
 
 /**
  * Background task that runs a ServerSocket to stream robot logs to remote Telnet clients.
- * Implements a broadcast server where multiple clients can connect and receive log messages.
- * 
- * Java 1.7 compatible - no lambdas, no diamond operators
- * Uses background thread pattern from Sunrise OS
  */
-public class LoggingServer implements Runnable {
+public class LoggingServer extends RoboticsAPIBackgroundTask {
     
     private ServerSocket serverSocket;
     private List<ClientConnection> clients;
     private AtomicBoolean running;
-    private ILogger logger;
     private int port;
     
-    /**
-     * Represents a connected client
-     */
     private class ClientConnection {
         Socket socket;
         PrintWriter writer;
@@ -61,40 +53,30 @@ public class LoggingServer implements Runnable {
         }
     }
     
-    public LoggingServer(ILogger logger, int port) {
-        this.logger = logger;
+    public void setPort(int port) {
         this.port = port;
-        this.clients = new ArrayList<ClientConnection>();
-        this.running = new AtomicBoolean(false);
     }
     
-    /**
-     * Start the logging server
-     * @throws IOException if server cannot be started
-     */
-    public void start() throws IOException {
+    @Override
+    public void initialize() {
+        this.clients = new ArrayList<ClientConnection>();
+        this.running = new AtomicBoolean(false);
+        getLogger().info("LoggingServer initialized");
+    }
+    
+    public void startServer() throws IOException {
         if (running.get()) {
             return;
         }
         
         serverSocket = new ServerSocket(port);
         running.set(true);
-        
-        Thread serverThread = new Thread(this);
-        serverThread.setDaemon(true);
-        serverThread.setName("LoggingServer-" + port);
-        serverThread.start();
-        
-        logger.info("LoggingServer started on port " + port);
+        getLogger().info("LoggingServer started on port " + port);
     }
     
-    /**
-     * Stop the logging server
-     */
-    public void stop() {
+    public void stopServer() {
         running.set(false);
         
-        // Close all client connections
         synchronized (clients) {
             for (ClientConnection client : clients) {
                 client.close();
@@ -102,25 +84,19 @@ public class LoggingServer implements Runnable {
             clients.clear();
         }
         
-        // Close server socket
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                logger.warn("Error closing server socket: " + e.getMessage());
+                getLogger().warn("Error closing server socket: " + e.getMessage());
             }
         }
         
-        logger.info("LoggingServer stopped");
+        getLogger().info("LoggingServer stopped");
     }
     
-    /**
-     * Broadcast a log message to all connected clients
-     * @param message Log message to broadcast
-     */
     public void broadcastLog(String message) {
         synchronized (clients) {
-            // Remove disconnected clients
             List<ClientConnection> disconnected = new ArrayList<ClientConnection>();
             for (ClientConnection client : clients) {
                 if (!client.isConnected()) {
@@ -133,11 +109,11 @@ public class LoggingServer implements Runnable {
         }
     }
     
-    /**
-     * Background thread that accepts new client connections
-     */
+    @Override
     public void run() {
-        while (running.get()) {
+        getLogger().info("LoggingServer background task started");
+        
+        while (running.get() && !Thread.currentThread().isInterrupted()) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 ClientConnection client = new ClientConnection(clientSocket);
@@ -146,21 +122,19 @@ public class LoggingServer implements Runnable {
                     clients.add(client);
                 }
                 
-                logger.info("Logging client connected from " + clientSocket.getInetAddress());
+                getLogger().info("Logging client connected from " + clientSocket.getInetAddress());
                 client.sendMessage("*** KUKA Robot Logging Server ***");
                 
             } catch (IOException e) {
                 if (running.get()) {
-                    logger.warn("Error accepting client connection: " + e.getMessage());
+                    getLogger().warn("Error accepting client connection: " + e.getMessage());
                 }
             }
         }
+        
+        getLogger().info("LoggingServer background task stopped");
     }
     
-    /**
-     * Get number of connected clients
-     * @return Number of active client connections
-     */
     public int getClientCount() {
         synchronized (clients) {
             return clients.size();
@@ -169,5 +143,11 @@ public class LoggingServer implements Runnable {
     
     public boolean isRunning() {
         return running.get();
+    }
+    
+    @Override
+    public void dispose() {
+        stopServer();
+        super.dispose();
     }
 }

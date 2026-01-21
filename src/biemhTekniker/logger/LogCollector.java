@@ -12,7 +12,7 @@ public class LogCollector implements ILogListener
         entries.add(entry);
     }
 
-    public LogEntry pollMessage()
+    public LogEntry pollEntry()
     {
         return entries.poll();
     }

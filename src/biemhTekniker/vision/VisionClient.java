@@ -54,7 +54,7 @@ public class VisionClient extends RoboticsAPIBackgroundTask
             return;
         }
 
-        clientSocket = new Socket("172.31.1.69", 59002);
+        clientSocket = new Socket(serverIp, serverPort);
         reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         writer = new DataOutputStream(clientSocket.getOutputStream());
 

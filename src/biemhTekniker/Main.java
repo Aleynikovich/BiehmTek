@@ -35,7 +35,7 @@ public class Main extends RoboticsAPIApplication
         while (true)
         {
             // Example: Ask for vision every 5 seconds
-            VisionGateway.send("15;BIEMH26_105055");
+            VisionGateway.send("15;BIEMH26_105055\n");
 
             // Wait a tiny bit for the background task to do its work
             ThreadUtil.milliSleep(5000);

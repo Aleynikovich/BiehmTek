@@ -103,7 +103,7 @@ public class Main extends RoboticsAPIApplication
 
         // Configure and start logging server
         // Note: logServer is injected and will be auto-started by framework
-        int logPort = config.getRobotPropertyInt("logging.port", 9000);
+        int logPort = config.getRobotPropertyInt("logging.port", 30000);
         logServer.setPort(logPort);
         try
         {
@@ -115,8 +115,8 @@ public class Main extends RoboticsAPIApplication
 
         // Configure and connect vision client
         // Note: visionClient is injected and will be auto-started by framework
-        String visionIp = config.getRobotProperty("vision.ip", "192.168.1.100");
-        int visionPort = config.getRobotPropertyInt("vision.port", 5000);
+        String visionIp = config.getRobotProperty("vision.ip", "172.31.1.69");
+        int visionPort = config.getRobotPropertyInt("vision.port", 59002);
         String delimiter = config.getRobotProperty("vision.delimiter", ",");
         visionClient.setConnectionParams(visionIp, visionPort, delimiter);
         try

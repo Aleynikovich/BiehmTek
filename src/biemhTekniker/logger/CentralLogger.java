@@ -22,25 +22,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * - DEBUG (4): Verbose debug/trace information
  * - Example: setMinimumLogLevel(LogLevel.HIGH) to show only priorities 0 and 1
  */
-public class Logger
+public class CentralLogger
 {
-    private static Logger instance;
+    private static CentralLogger instance;
     private final SimpleDateFormat timeFormat;
     private final List<LogHandler> handlers;
     private volatile LogLevel minimumLogLevel;
 
-    private Logger()
+    private CentralLogger()
     {
         this.timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
         this.handlers = new CopyOnWriteArrayList<LogHandler>();
         this.minimumLogLevel = LogLevel.MEDIUM; // Default: show priorities 0, 1, 2
     }
 
-    public static synchronized Logger getInstance()
+    public static synchronized CentralLogger getInstance()
     {
         if (instance == null)
         {
-            instance = new Logger();
+            instance = new CentralLogger();
         }
         return instance;
     }

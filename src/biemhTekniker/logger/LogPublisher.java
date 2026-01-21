@@ -2,13 +2,18 @@ package biemhTekniker.logger;
 
 public class LogPublisher implements Runnable
 {
-    private final LogCollector _LogCollector;
+    private final LogCollector _logCollector;
     private Thread _workerThread;
     private volatile boolean _running = false;
+    private LogLevel _filterLevel = LogLevel.INFO;
 
     public LogPublisher(LogCollector collector)
     {
-        this._LogCollector = collector;
+        this._logCollector = collector;
+    }
+
+    public void setFilterLevel(LogLevel level) {
+        this._filterLevel = level;
     }
 
     public void start()
@@ -30,21 +35,17 @@ public class LogPublisher implements Runnable
     }
 
     @Override
-    public void run()
-    {
-        while (_running)
-        {
-            LogEntry entry = _LogCollector.pollMessage();
-            if (entry != null)
-            {
-                System.out.println(entry);
-            } else
-            {
-                try
-                {
+    public void run() {
+        while (_running) {
+            LogEntry entry = _logCollector.pollEntry();
+            if (entry != null) {
+                if (entry.getLevel().ordinal() >= _filterLevel.ordinal()) {
+                    System.out.println(entry);
+                }
+            } else {
+                try {
                     Thread.sleep(100);
-                } catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     break;
                 }
             }

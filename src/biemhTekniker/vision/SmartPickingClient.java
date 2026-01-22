@@ -7,11 +7,18 @@ import com.kuka.generated.ioAccess.VisionIOGroup;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 import javax.inject.Inject;
 
+/**
+ * Threaded Background Task - Mimics BinPicking_EKI logic
+ * Compatible with Java 1.6 / 1.7 (Sunrise Workbench)
+ */
 public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     private static final Logger log = Logger.getLogger(SmartPickingClient.class);
+    
+    // SERVER CONFIG
     private static final String SERVER_IP = "172.31.1.69";
     private static final int PORT = 59002;
 
@@ -30,33 +37,50 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     @Override
     public void run() {
+        // Main Loop (Replaces the Cyclic behavior)
         while (true) {
             try {
-                if (!_isConnected) {
+                // 1. Connection Management
+                if (!_isConnected || _socket == null || _socket.isClosed()) {
                     tryToConnect();
-                } else {
+                } 
+                else {
+                    // 2. Logic: Only send if PLC asks for it
                     if (vision.getTriggerRequest()) {
-                        sendAndReceive();
-                        // Wait until PLC turns off the trigger to avoid double sending
-                        while (vision.getTriggerRequest()) {
-                             Thread.sleep(100);
+                        
+                        log.info("Trigger received. Sending data...");
+                        boolean success = performTransaction("15;BIEMH26_105055");
+                        
+                        if(success) {
+                            // Wait for PLC to turn OFF trigger to avoid double sending
+                            // Simulates the flow in BinPicking_EKI
+                            while(vision.getTriggerRequest()) {
+                                Thread.sleep(100);
+                            }
                         }
                     }
                 }
-                Thread.sleep(100); // Prevent CPU overload
+                
+                // CRITICAL: Prevent CPU 100% usage
+                Thread.sleep(100); 
+
             } catch (Exception e) {
-                // If loop crashes, wait 1s and restart
-                try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+                log.error("Error in Main Loop: " + e.getMessage());
+                _isConnected = false;
+                try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
             }
         }
     }
 
     private void tryToConnect() {
         try {
-            if (_socket != null && !_socket.isClosed()) return;
+            if (_socket != null) { try { _socket.close(); } catch(Exception e){} }
 
+            // log.info("Connecting to " + SERVER_IP + "...");
             _socket = new Socket(SERVER_IP, PORT);
-            _socket.setSoTimeout(1000); 
+            
+            // TIMEOUT is crucial so read() doesn't hang forever if server dies
+            _socket.setSoTimeout(2000); 
             
             _out = _socket.getOutputStream();
             _in = _socket.getInputStream();
@@ -66,34 +90,49 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
         } catch (Exception e) {
             _isConnected = false;
+            // Silent fail to keep log clean until connected
         }
     }
 
-    private void sendAndReceive() {
+    /**
+     * Sends data and waits for response, mimicking get_message() from legacy code
+     */
+    private boolean performTransaction(String message) {
         try {
-            String payload = "15;BIEMH26_105055\r\n";
+            // --- STEP 1: SEND ---
+            // Append \r\n manually (Hercules style)
+            String payload = message + "\r\n"; 
             
-            // COMPATIBILITY FIX: Use "US-ASCII" string literal
-            _out.write(payload.getBytes("US-ASCII"));
+            // Java 1.6 safe way to get bytes
+            byte[] data = payload.getBytes("US-ASCII"); 
+            
+            _out.write(data);
             _out.flush();
 
+            // --- STEP 2: WAIT (Polling) ---
+            // We give the server a moment to process
             Thread.sleep(100);
 
-            byte[] buffer = new byte[256];
+            // --- STEP 3: READ ---
+            byte[] buffer = new byte[1024];
+            
+            // This reads WHATEVER is in the buffer (doesn't wait for newline)
             int bytesRead = _in.read(buffer);
 
             if (bytesRead > 0) {
-                // COMPATIBILITY FIX: Use "US-ASCII" string literal
+                // Java 1.6 safe String creation
                 String response = new String(buffer, 0, bytesRead, "US-ASCII");
                 log.info("SERVER RESPONSE: " + response);
+                return true;
             } else {
-                log.info("No data received.");
+                log.info("Server received data but sent empty response.");
+                return false;
             }
 
         } catch (Exception e) {
-            log.error("Comms Error: " + e.getMessage());
-            _isConnected = false;
-            try { _socket.close(); } catch (Exception ignored) {}
+            log.error("Transaction Failed: " + e.getMessage());
+            _isConnected = false; // Force reconnect on next loop
+            return false;
         }
     }
     

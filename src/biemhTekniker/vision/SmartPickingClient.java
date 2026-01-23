@@ -60,7 +60,6 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                             log.info("Reference loaded successfully.");
                         } else {
                             log.error("Reference load failed. Response: [" + resp + "]");
-                            // We don't set _isConnected to false here so it can retry next loop
                         }
                     }
 
@@ -159,9 +158,8 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     private String performTransaction(String message) {
         try {
-            // Added \n because most socket servers require a line terminator to process the command
-            String payload = message + "\n";
-            _out.write(payload.getBytes("US-ASCII"));
+            // Reverted to raw bytes without extra terminators
+            _out.write(message.getBytes("US-ASCII"));
             _out.flush();
             log.info("Sent: [" + message + "]");
 

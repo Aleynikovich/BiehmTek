@@ -24,7 +24,8 @@ public class Main extends RoboticsAPIApplication
     public void initialize()
     {
         initializeLogging();
-        getApplicationControl().setApplicationOverride(0.05);
+        getApplicationControl().setApplicationOverride(0.4);
+        getApplicationControl().clipApplicationOverride(0.05);
     }
 
     @Override

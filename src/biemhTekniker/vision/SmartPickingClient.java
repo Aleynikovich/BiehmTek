@@ -55,8 +55,13 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                     tryToConnect();
                 } else {
                     if (!_referenceLoaded) {
+                    	String resp;
+                    	log.info("Attempting to clear references...");
+                    	resp = performTransaction("19");
+                    	log.info("Attempting to clear errors...");
+                    	resp = performTransaction("18");
                         log.info("Attempting to load reference...");
-                        String resp = performTransaction("15;BIEMH26_105055");
+                        resp = performTransaction("15;BIEMH26_105055");
                         if (CMD_SUCCESS.equals(resp)) {
                             _referenceLoaded = true;
                             log.info("Reference loaded successfully.");

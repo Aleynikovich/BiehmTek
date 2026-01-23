@@ -56,11 +56,12 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                 } else {
                     if (!_referenceLoaded) {
                     	String resp;
+                  
+                        log.info("Attempting to load reference...");
+                        resp = performTransaction("15;BIEMH26_105055");
                     	log.info("Attempting to clear references...");
                     	resp = performTransaction("19");
-                    	log.info("Attempting to clear errors...");
-                    	resp = performTransaction("18");
-                        log.info("Attempting to load reference...");
+                    	log.info("Attempting to load reference...");
                         resp = performTransaction("15;BIEMH26_105055");
                         if (CMD_SUCCESS.equals(resp)) {
                             _referenceLoaded = true;
@@ -168,7 +169,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
             _socket.connect(new InetSocketAddress(SERVER_IP, PORT), 5000);
             
             // Transaction timeout
-            _socket.setSoTimeout(25000); 
+            _socket.setSoTimeout(10000); 
             
             _in = _socket.getInputStream();
             _out = _socket.getOutputStream();

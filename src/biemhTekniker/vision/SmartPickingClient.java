@@ -112,6 +112,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
             
             _out.write(data);
             _out.flush();
+            log.info("Sending [" + message + "] to vision server.");
 
             // --- STEP 2: WAIT (Polling) ---
             // We give the server a moment to process

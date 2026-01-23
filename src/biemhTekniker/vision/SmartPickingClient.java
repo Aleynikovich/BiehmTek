@@ -5,29 +5,35 @@ import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
 import com.kuka.generated.ioAccess.VisionInputsIOGroup;
 import com.kuka.generated.ioAccess.VisionOutputsIOGroup;
 
-
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
+import java.util.Scanner;
 import javax.inject.Inject;
 
 /**
- * Threaded Background Task - Mimics BinPicking_EKI logic
- * Compatible with Java 1.6 / 1.7 (Sunrise Workbench)
+ * Background Task for SmartPicking Vision System.
+ * Handles PLC handshaking and synchronous socket communication.
  */
 public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     private static final Logger log = Logger.getLogger(SmartPickingClient.class);
     
-    // SERVER CONFIG
     private static final String SERVER_IP = "172.31.1.69";
     private static final int PORT = 59002;
+    
+    // Response codes from camera
+    private static final String CMD_SUCCESS = "0";
+    private static final String CMD_FAILURE = "-1";
 
     private Socket _socket;
-    private OutputStream _out;
-    private InputStream _in;
+    private Scanner _in;
+    private PrintWriter _out;
     private boolean _isConnected = false;
+    private boolean _referenceLoaded = false;
+    
+    // Internal state to track if we've already notified the camera of the mode
+    private int _currentCameraMode = 0; // 0: None, 101: Run, 102: Calib
 
     @Inject
     private VisionInputsIOGroup visionInputs;
@@ -37,114 +43,157 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
     @Override
     public void initialize() {
         log.info("SmartPickingClient initialized.");
+        resetOutputs();
     }
 
     @Override
     public void run() {
-        // Main Loop (Replaces the Cyclic behavior)
         while (true) {
             try {
-                // 1. Connection Management
                 if (!_isConnected || _socket == null || _socket.isClosed()) {
+                    _referenceLoaded = false;
+                    _currentCameraMode = 0;
                     tryToConnect();
-                } 
-                else {
-                    // 2. Logic: Only send if PLC asks for it
-                    if (visionInputs.getDataRequest()) {
-                        
-                        log.info("Trigger received. Sending data...");
-                        boolean success = performTransaction("15;BIEMH26_105055");
-                        success = performTransaction("101");
-                        success = performTransaction("2");
-                        success = performTransaction("3");
-                        success = performTransaction("4");
-                        success = performTransaction("9");
-                        if(success) {
-                            // Wait for PLC to turn OFF trigger to avoid double sending
-                            // Simulates the flow in BinPicking_EKI
-                            while(visionInputs.getDataRequest()) {
-                                Thread.sleep(100);
-                            }
+                } else {
+                    // 1. One-time initialization for the reference
+                    if (!_referenceLoaded) {
+                        String resp = performTransaction("15;BIEMH26_105055");
+                        if (CMD_SUCCESS.equals(resp)) {
+                            _referenceLoaded = true;
+                            log.info("Reference loaded successfully.");
+                        } else {
+                            log.error("Failed to load reference. Server returned: " + resp);
+                        }
+                    }
+
+                    // 2. Mode Management (Run vs Calibration)
+                    handleModeSelection();
+
+                    // 3. Request Management
+                    if (visionInputs.getRunMode() && _currentCameraMode == 101) {
+                        if (visionInputs.getDataRequest()) {
+                            executeRunSequence();
+                        }
+                    } else if (visionInputs.getCalibrationMode() && _currentCameraMode == 102) {
+                        if (visionInputs.getCalibrationRequest()) {
+                            executeCalibrationPlaceholder();
                         }
                     }
                 }
                 
-                // CRITICAL: Prevent CPU 100% usage
                 Thread.sleep(100); 
 
             } catch (Exception e) {
-                log.error("Error in Main Loop: " + e.getMessage());
+                log.error("Main Loop Error: " + e.getMessage());
                 _isConnected = false;
                 try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
             }
         }
     }
 
+    private void handleModeSelection() {
+        boolean runReq = visionInputs.getRunMode();
+        boolean calReq = visionInputs.getCalibrationMode();
+
+        if (runReq && _currentCameraMode != 101) {
+            String resp = performTransaction("101");
+            if (CMD_SUCCESS.equals(resp)) {
+                _currentCameraMode = 101;
+                log.info("Camera switched to RUN mode (101)");
+            }
+        } else if (calReq && _currentCameraMode != 102) {
+            String resp = performTransaction("102");
+            if (CMD_SUCCESS.equals(resp)) {
+                _currentCameraMode = 102;
+                log.info("Camera switched to CALIBRATION mode (102)");
+            }
+        } else if (!runReq && !calReq) {
+            _currentCameraMode = 0;
+        }
+    }
+
+    private void executeRunSequence() {
+        log.info("Data Request received. Executing sequence 2,3,4,9...");
+        
+        visionOutputs.setDataRequestSent(true);
+        visionOutputs.setPickPositionReady(false);
+
+        // Sequence of data requests
+        boolean success = true;
+        String[] sequence = {"2", "3", "4", "9"};
+        
+        for (int i = 0; i < sequence.length; i++) {
+            String resp = performTransaction(sequence[i]);
+            if (resp == null || CMD_FAILURE.equals(resp)) {
+                log.error("Sequence failed at command [" + sequence[i] + "] with response: " + resp);
+                success = false;
+                break;
+            }
+        }
+
+        if (success) {
+            visionOutputs.setPickPositionReady(true);
+            log.info("Run sequence complete. Pick position ready.");
+            
+            while (visionInputs.getDataRequest()) {
+                try { Thread.sleep(50); } catch (InterruptedException e) {}
+            }
+            
+            visionOutputs.setDataRequestSent(false);
+            visionOutputs.setPickPositionReady(false);
+        } else {
+            visionOutputs.setDataRequestSent(false);
+        }
+    }
+
+    private void executeCalibrationPlaceholder() {
+        log.info("Calibration Request received. (Placeholder logic)");
+        visionOutputs.setCalibrationComplete(true);
+        
+        while (visionInputs.getCalibrationRequest()) {
+            try { Thread.sleep(50); } catch (InterruptedException e) {}
+        }
+        visionOutputs.setCalibrationComplete(false);
+    }
+
     private void tryToConnect() {
         try {
             if (_socket != null) { try { _socket.close(); } catch(Exception e){} }
-
-            // log.info("Connecting to " + SERVER_IP + "...");
             _socket = new Socket(SERVER_IP, PORT);
+            _socket.setSoTimeout(25000); 
             
-            // TIMEOUT is crucial so read() doesn't hang forever if server dies
-            _socket.setSoTimeout(20000); 
-            
-            _out = _socket.getOutputStream();
-            _in = _socket.getInputStream();
+            // High-level wrappers for cleaner code
+            _in = new Scanner(_socket.getInputStream(), "US-ASCII");
+            _out = new PrintWriter(new OutputStreamWriter(_socket.getOutputStream(), "US-ASCII"), true);
             
             _isConnected = true;
-            log.info("CONNECTED to Smart Picking Server.");
-
+            log.info("Connected to Vision Server.");
         } catch (Exception e) {
             _isConnected = false;
-            // Silent fail to keep log clean until connected
         }
     }
 
-    /**
-     * Sends data and waits for response, mimicking get_message() from legacy code
-     */
-    private boolean performTransaction(String message) {
+    private String performTransaction(String message) {
         try {
-            // --- STEP 1: SEND ---
-            // Append \r\n manually (Hercules style)
-            String payload = message;// + "\r\n"; 
-            
-            // Java 1.6 safe way to get bytes
-            byte[] data = payload.getBytes("US-ASCII"); 
-            
-            _out.write(data);
+            _out.print(message + "\r\n");
             _out.flush();
-            log.info("Sending [" + message + "] to vision server.");
 
-            // --- STEP 2: WAIT (Polling) ---
-            // We give the server a moment to process
-            Thread.sleep(5000);
-
-            // --- STEP 3: READ ---
-            byte[] buffer = new byte[1024];
-            
-            // This reads WHATEVER is in the buffer (doesn't wait for newline)
-            int bytesRead = _in.read(buffer);
-
-            if (bytesRead > 0) {
-                // Java 1.6 safe String creation
-                String response = new String(buffer, 0, bytesRead, "US-ASCII");
-                log.info("SERVER RESPONSE: " + response);
-                return true;
-            } else {
-                log.info("Server received data but sent empty response.");
-                return false;
+            if (_in.hasNext()) {
+                return _in.next();
             }
-
         } catch (Exception e) {
-            log.error("Transaction Failed: " + e.getMessage());
-            _isConnected = false; // Force reconnect on next loop
-            return false;
+            log.error("Transaction failed [" + message + "]: " + e.getMessage());
+            _isConnected = false;
         }
+        return null;
     }
-    
+
+    private void resetOutputs() {
+        visionOutputs.setDataRequestSent(false);
+        visionOutputs.setPickPositionReady(false);
+        visionOutputs.setCalibrationComplete(false);
+    }
+
     @Override
     public void dispose() {
         try { if (_socket != null) _socket.close(); } catch (Exception e) {}

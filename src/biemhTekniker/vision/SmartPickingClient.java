@@ -58,6 +58,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                     // 1. One-time initialization for the reference
                     if (!_referenceLoaded) {
                         String resp = performTransaction("15;BIEMH26_105055");
+                        log.info(resp);
                         if (CMD_SUCCESS.equals(resp)) {
                             _referenceLoaded = true;
                             log.info("Reference loaded successfully.");

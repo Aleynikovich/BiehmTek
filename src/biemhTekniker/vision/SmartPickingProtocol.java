@@ -56,16 +56,10 @@ public class SmartPickingProtocol {
         return execute(mode).isSuccess();
     }
 
-    /**
-     * Executes a basic command without additional parameters.
-     */
     public VisionResult execute(Command cmd) {
         return execute(cmd, null);
     }
 
-    /**
-     * Executes a command with arguments (e.g., "4;1;1" or "15;refName").
-     */
     public VisionResult execute(Command cmd, String args) {
         String message = cmd.getCode();
         if (args != null && !args.isEmpty()) {
@@ -73,7 +67,7 @@ public class SmartPickingProtocol {
         }
 
         String rawResponse = _client.sendAndReceive(message);
-        VisionResult result = new VisionResult(rawResponse);
+        VisionResult result = new VisionResult(rawResponse, cmd);
 
         if (!result.isSuccess()) {
             log.warn("Command " + cmd + " failed or returned no data.");
@@ -87,11 +81,13 @@ public class SmartPickingProtocol {
      */
     public static class VisionResult {
         private final boolean success;
+        private final Command _cmd;
         private final double[] data;
         private final String raw;
 
-        public VisionResult(String rawResponse) {
+        public VisionResult(String rawResponse, Command cmd) {
             this.raw = rawResponse;
+            this._cmd = cmd;
             if (rawResponse == null || rawResponse.isEmpty()) {
                 this.success = false;
                 this.data = new double[0];
@@ -116,30 +112,47 @@ public class SmartPickingProtocol {
 
         public boolean isSuccess() { return success; }
 
-        /**
-         * Getters for Coordinates (applicable to commands 8, 9, 11).
-         * Indices based on the user manual:
-         * - Container (8): X=5, Y=6, Z=7 (meters)
-         * - Parts (9/11): X=2, Y=3, Z=4 (meters)
-         */
+        // --- Getters with Index Switching Logic ---
 
         public double getX() {
-            return data.length > 5 ? data[5] : 0;
-        }
-        public double getY() {
-            return data.length > 6 ? data[6] : 0;
-        }
-        public double getZ() {
-            return data.length > 7 ? data[7] : 0;
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 5 : 2;
+            return getDataSafe(index);
         }
 
-        public double getRx() { return data.length > 8 ? data[8] : 0; }
-        public double getRy() { return data.length > 9 ? data[9] : 0; }
-        public double getRz() { return data.length > 10 ? data[10] : 0; }
+        public double getY() {
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 6 : 3;
+            return getDataSafe(index);
+        }
+
+        public double getZ() {
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 7 : 4;
+            return getDataSafe(index);
+        }
+
+        public double getRx() {
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 8 : 5;
+            return getDataSafe(index);
+        }
+
+        public double getRy() {
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 9 : 6;
+            return getDataSafe(index);
+        }
+
+        public double getRz() {
+            int index = (_cmd == Command.GET_CONTAINER_POS) ? 10 : 7;
+            return getDataSafe(index);
+        }
 
         public double getScore() {
-            // Index 11 for Container (8). For Parts (9), 11 is usually part of grasping point info.
-            return data.length > 11 ? data[11] : 0;
+            // Container score is at 11, Parts usually at 8 or similar depending on gripper count
+            // Defaulting to Container index (11) if not specified, safe check applied.
+            int index = 11;
+            return getDataSafe(index);
+        }
+
+        private double getDataSafe(int index) {
+            return (data.length > index) ? data[index] : 0.0;
         }
 
         @Override

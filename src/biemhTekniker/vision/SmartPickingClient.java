@@ -114,11 +114,23 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
         for (int i = 0; i < steps.length; i++) {
             if (!_running) return;
             VisionResult res = _protocol.execute(steps[i]);
+
             if (!res.isSuccess()) {
                 log.error("Step " + steps[i] + " failed.");
                 success = false;
                 break;
             }
+
+            // --- BRIDGE UPDATE START ---
+            // If we successfully got part positions, save them to the bridge
+            if (steps[i] == Command.GET_PART_POS) {
+                VisionDataBridge.get().update(
+                        res.getX(), res.getY(), res.getZ(),
+                        res.getRx(), res.getRy(), res.getRz()
+                );
+                log.info("Part found at X=" + res.getX() + ", Y=" + res.getY());
+            }
+            // --- BRIDGE UPDATE END ---
         }
 
         if (success) {

@@ -24,7 +24,8 @@ public class Main extends RoboticsAPIApplication
     public void initialize()
     {
         initializeLogging();
-        // Removed motion overrides since we aren't moving
+        getApplicationControl().setApplicationOverride(0.5);
+        getApplicationControl().clipManualOverride(0.05);
     }
 
     @Override

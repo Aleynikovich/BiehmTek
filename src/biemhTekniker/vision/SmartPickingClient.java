@@ -101,7 +101,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
         try {
             // --- STEP 1: SEND ---
             // Append \r\n manually (Hercules style)
-            String payload = message + "\r\n"; 
+            String payload = message;// + "\r\n"; 
             
             // Java 1.6 safe way to get bytes
             byte[] data = payload.getBytes("US-ASCII"); 

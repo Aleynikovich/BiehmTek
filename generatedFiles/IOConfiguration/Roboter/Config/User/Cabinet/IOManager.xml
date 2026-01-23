@@ -36,13 +36,25 @@
     </Bus>
     <Bus BusDriverName="PNIODriver" BusInstanceName="PNIO-DEV">
       <IOList>
-        <DigitalIO Name="Vision.TriggerSent" Type="OUTPUT" Scope="USER_IO" StartBit="2504" BitSize="1" Signed="false">
+        <DigitalIO Name="VisionOutputs.DataRequestSent" Type="OUTPUT" Scope="USER_IO" StartBit="2320" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
-        <DigitalIO Name="Vision.PickPositionReady" Type="OUTPUT" Scope="USER_IO" StartBit="2505" BitSize="1" Signed="false">
+        <DigitalIO Name="VisionOutputs.PickPositionReady" Type="OUTPUT" Scope="USER_IO" StartBit="2321" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
-        <DigitalIO Name="Vision.TriggerRequest" Type="INPUT" Scope="USER_IO" StartBit="320" BitSize="1" Signed="false">
+        <DigitalIO Name="VisionOutputs.CalibrationComplete" Type="OUTPUT" Scope="USER_IO" StartBit="2322" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="VisionInputs.RunMode" Type="INPUT" Scope="USER_IO" StartBit="144" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="VisionInputs.CalibrationMode" Type="INPUT" Scope="USER_IO" StartBit="145" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="VisionInputs.DataRequest" Type="INPUT" Scope="USER_IO" StartBit="146" BitSize="1" Signed="false">
+          <Description />
+        </DigitalIO>
+        <DigitalIO Name="VisionInputs.CalibrationRequest" Type="INPUT" Scope="USER_IO" StartBit="147" BitSize="1" Signed="false">
           <Description />
         </DigitalIO>
       </IOList>

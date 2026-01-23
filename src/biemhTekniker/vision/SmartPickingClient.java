@@ -2,7 +2,9 @@ package biemhTekniker.vision;
 
 import biemhTekniker.logger.Logger;
 import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
-import com.kuka.generated.ioAccess.VisionIOGroup;
+import com.kuka.generated.ioAccess.VisionInputsIOGroup;
+import com.kuka.generated.ioAccess.VisionOutputsIOGroup;
+
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,8 +30,10 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
     private boolean _isConnected = false;
 
     @Inject
-    private VisionIOGroup vision;
-
+    private VisionInputsIOGroup visionInputs;
+    @Inject
+    private VisionOutputsIOGroup visionOutputs;
+    
     @Override
     public void initialize() {
         log.info("SmartPickingClient initialized.");
@@ -46,7 +50,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                 } 
                 else {
                     // 2. Logic: Only send if PLC asks for it
-                    if (vision.getTriggerRequest()) {
+                    if (visionInputs.getDataRequest()) {
                         
                         log.info("Trigger received. Sending data...");
                         boolean success = performTransaction("15;BIEMH26_105055");
@@ -58,7 +62,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                         if(success) {
                             // Wait for PLC to turn OFF trigger to avoid double sending
                             // Simulates the flow in BinPicking_EKI
-                            while(vision.getTriggerRequest()) {
+                            while(visionInputs.getDataRequest()) {
                                 Thread.sleep(100);
                             }
                         }

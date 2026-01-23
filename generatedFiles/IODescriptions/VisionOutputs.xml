@@ -3,15 +3,15 @@
 Automatically generated IO group description. Please do NOT modify!
 -->
 <SunriseIOGroupDescription xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0">
-  <IOGroup DisplayName="Vision" IconName="Vision" SignalTypes="InOut" TemplateName="Vision">
+  <IOGroup DisplayName="VisionOutputs" IconName="VisionOutputs" SignalTypes="InOut" TemplateName="VisionOutputs">
     <IOs>
-      <DigitalIOItem Name="TriggerRequest" DataType="BOOL" IOType="Input" UsedBitWidth="1" IsConnected="true">
-        <Description />
-      </DigitalIOItem>
-      <DigitalIOItem Name="TriggerSent" DataType="BOOL" IOType="Output" UsedBitWidth="1" IsConnected="true">
+      <DigitalIOItem Name="DataRequestSent" DataType="BOOL" IOType="Output" UsedBitWidth="1" IsConnected="true">
         <Description />
       </DigitalIOItem>
       <DigitalIOItem Name="PickPositionReady" DataType="BOOL" IOType="Output" UsedBitWidth="1" IsConnected="true">
+        <Description />
+      </DigitalIOItem>
+      <DigitalIOItem Name="CalibrationComplete" DataType="BOOL" IOType="Output" UsedBitWidth="1" IsConnected="true">
         <Description />
       </DigitalIOItem>
     </IOs>

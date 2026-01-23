@@ -50,7 +50,11 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                         
                         log.info("Trigger received. Sending data...");
                         boolean success = performTransaction("15;BIEMH26_105055");
-                        
+                        success = performTransaction("101");
+                        success = performTransaction("2");
+                        success = performTransaction("3");
+                        success = performTransaction("4");
+                        success = performTransaction("9");
                         if(success) {
                             // Wait for PLC to turn OFF trigger to avoid double sending
                             // Simulates the flow in BinPicking_EKI

@@ -53,10 +53,14 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                     tryToConnect();
                 } else {
                     if (!_referenceLoaded) {
+                        log.info("Attempting to load reference...");
                         String resp = performTransaction("15;BIEMH26_105055");
                         if (CMD_SUCCESS.equals(resp)) {
                             _referenceLoaded = true;
                             log.info("Reference loaded successfully.");
+                        } else {
+                            log.error("Reference load failed. Response: [" + resp + "]");
+                            // We don't set _isConnected to false here so it can retry next loop
                         }
                     }
 
@@ -112,6 +116,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
         for (int i = 0; i < sequence.length; i++) {
             String resp = performTransaction(sequence[i]);
             if (resp == null || CMD_FAILURE.equals(resp)) {
+                log.error("Sequence failed at step " + sequence[i] + ". Resp: " + resp);
                 success = false;
                 break;
             }
@@ -154,16 +159,21 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     private String performTransaction(String message) {
         try {
-            _out.write(message.getBytes("US-ASCII"));
+            // Added \n because most socket servers require a line terminator to process the command
+            String payload = message + "\n";
+            _out.write(payload.getBytes("US-ASCII"));
             _out.flush();
-            log.info("Sent [" + message + "] to camera.");
+            log.info("Sent: [" + message + "]");
 
             byte[] buffer = new byte[1024];
-            // This blocks until ANY byte is received, then returns immediately.
             int bytesRead = _in.read(buffer);
 
             if (bytesRead > 0) {
-                return new String(buffer, 0, bytesRead, "US-ASCII").trim();
+                String result = new String(buffer, 0, bytesRead, "US-ASCII").trim();
+                log.info("Received: [" + result + "]");
+                return result;
+            } else {
+                log.warn("No bytes read from camera.");
             }
         } catch (Exception e) {
             log.error("Comm error on [" + message + "]: " + e.getMessage());

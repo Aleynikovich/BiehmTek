@@ -5,11 +5,11 @@ import com.kuka.roboticsAPI.applicationModel.tasks.RoboticsAPIBackgroundTask;
 import com.kuka.generated.ioAccess.VisionInputsIOGroup;
 import com.kuka.generated.ioAccess.VisionOutputsIOGroup;
 
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Scanner;
 import javax.inject.Inject;
 
 /**
@@ -27,7 +27,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
     private static final String CMD_FAILURE = "-1";
 
     private Socket _socket;
-    private Scanner _in;
+    private InputStream _in;
     private PrintWriter _out;
     private boolean _isConnected = false;
     private boolean _referenceLoaded = false;
@@ -57,7 +57,6 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
                 } else {
                     if (!_referenceLoaded) {
                         log.info("Attempting to load reference...");
-                        // Executing the sequence defined in your working version
                         performTransaction("15;BIEMH26_105055");
                         performTransaction("19");
                         String resp = performTransaction("15;BIEMH26_105055");
@@ -165,10 +164,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
             _socket.connect(new InetSocketAddress(SERVER_IP, PORT), 5000);
             _socket.setSoTimeout(10000); 
             
-            _in = new Scanner(_socket.getInputStream(), "US-ASCII");
-            // Set delimiter to accept parentheses and commas as token separators if needed, 
-            // but we will handle cleaning manually for better control.
-            
+            _in = _socket.getInputStream();
             _out = new PrintWriter(new OutputStreamWriter(_socket.getOutputStream(), "US-ASCII"), true);
             
             _isConnected = true;
@@ -185,9 +181,12 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
             _out.flush();
             log.info("Sent: [" + message + "]");
 
-            // Scanner.next() blocks until a token is available
-            if (_in.hasNext()) {
-                String raw = _in.next();
+            byte[] buffer = new byte[1024];
+            // read() blocks until at least one byte is available, then returns immediately.
+            int bytesRead = _in.read(buffer);
+
+            if (bytesRead > 0) {
+                String raw = new String(buffer, 0, bytesRead, "US-ASCII");
                 log.debug("Received Raw: [" + raw + "]");
                 
                 String cleaned = raw.replace("(", "").replace(")", "").trim();
@@ -218,7 +217,7 @@ public class SmartPickingClient extends RoboticsAPIBackgroundTask {
 
     private void closeConnection() {
         _isConnected = false;
-        if (_in != null) _in.close();
+        try { if (_in != null) _in.close(); } catch (Exception e) {}
         if (_out != null) _out.close();
         try { if (_socket != null) _socket.close(); } catch (Exception e) {}
         _in = null;

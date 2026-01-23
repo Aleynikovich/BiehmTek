@@ -16,7 +16,6 @@ public class Main extends RoboticsAPIApplication
     @Inject
     private LBR iiwa;
 
-    private LogCollector _logCollector;
     private LogPublisher _logPublisher;
     private static final Logger log = Logger.getLogger(Main.class);
 
@@ -69,7 +68,7 @@ public class Main extends RoboticsAPIApplication
     {
         try
         {
-            _logCollector = new LogCollector();
+            LogCollector _logCollector = new LogCollector();
             LogManager.register(_logCollector);
 
             _logPublisher = new LogPublisher(_logCollector);

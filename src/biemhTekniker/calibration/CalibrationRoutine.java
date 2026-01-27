@@ -228,7 +228,7 @@ public class CalibrationRoutine {
         double alpha = Math.toDegrees(pose.getAlphaRad());
 
         // Build message string
-        return String.format("%.0f;%.0f;%.0f;%.0f;%.0f;%.0f",
+        return String.format("%.0000f;%.0000f;%.0000f;%.0f;%.0000f;%.0000f",
                 x, y, z, gamma, beta, alpha);
     }
 }

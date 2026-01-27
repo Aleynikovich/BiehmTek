@@ -44,7 +44,7 @@ public class SmartPickingProtocol {
      */
     public boolean loadReference(String name) {
         execute(Command.LOAD_REFERENCE, name);
-        _client.sendAndReceive("19"); // Internal cleanup/reset command
+        _client.sendAndReceive("19", false); // Internal cleanup/reset command
         VisionResult res = execute(Command.LOAD_REFERENCE, name);
         return res.isSuccess();
     }
@@ -70,7 +70,7 @@ public class SmartPickingProtocol {
             message += ";" + args;
         }
         log.debug("Sending " + message + " to cam.");
-        String rawResponse = _client.sendAndReceive(message);
+        String rawResponse = _client.sendAndReceive(message, false);
         VisionResult result = new VisionResult(rawResponse, cmd);
         log.debug(result.toString());
 

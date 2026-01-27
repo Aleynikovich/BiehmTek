@@ -46,7 +46,7 @@ public class VisionSocketClient {
         }
     }
 
-    public String sendAndReceive(String message) {
+    public String sendAndReceive(String message, boolean expectResponse) {
         if (!isConnected()) {
             return null;
         }
@@ -55,20 +55,28 @@ public class VisionSocketClient {
             out.print(message);
             out.flush();
             byte[] buffer = new byte[2048];
-            int bytesRead = in.read(buffer);
-
-            if (bytesRead > 0) {
-                String result = new String(buffer, 0, bytesRead, "US-ASCII");
-                return result;
-            } else {
-                log.warn("No data returned from camera.");
-                //close();
-                return null;
+            
+            if (expectResponse)
+            {
+	            int bytesRead = in.read(buffer);
+	
+	            if (bytesRead > 0) {
+	                String result = new String(buffer, 0, bytesRead, "US-ASCII");
+	                return result;
+	            } else {
+	                log.warn("No data returned from camera.");
+	                //close();
+	                return null;
+	            }
+            }
+            else
+            {
+            	return "0";
             }
         } catch (IOException e) {
             log.error("Communication error: " + e.getMessage());
             //close();
-            return "0";
+            return null;
         }
     }
 

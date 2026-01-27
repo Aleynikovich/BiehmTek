@@ -234,9 +234,9 @@ public class CalibrationRoutine {
         poses[2] = String.format("%.0f", pose.getZ()*10);
         
         //Convert
-        double cA = Math.cos(Math.toDegrees(pose.getAlphaRad())), sA = Math.sin(Math.toDegrees(pose.getAlphaRad()));
-        double cB = Math.cos(Math.toDegrees(pose.getBetaRad())), sB = Math.sin(Math.toDegrees(pose.getBetaRad()));
-        double cC = Math.cos(Math.toDegrees(pose.getGammaRad())), sC = Math.sin(Math.toDegrees(pose.getGammaRad()));
+        double cA = Math.cos(pose.getAlphaRad()), sA = Math.sin(pose.getAlphaRad());
+        double cB = Math.cos(pose.getBetaRad()), sB = Math.sin(pose.getBetaRad());
+        double cC = Math.cos((pose.getGammaRad())), sC = Math.sin((pose.getGammaRad()));
          
         double[][] R = {
             { cA*cB,  cA*sB*sC - sA*cC,  cA*sB*cC + sA*sC },
@@ -251,9 +251,9 @@ public class CalibrationRoutine {
         
         
         // Convert angles: radians to millidegrees     
-        poses[3] = String.format("%.0f", alpha*1000);
-        poses[4] = String.format("%.0f", beta*1000);
-        poses[5] = String.format("%.0f", gamma*1000);
+        poses[3] = String.format("%.0f", Math.toDegrees(alpha*1000));
+        poses[4] = String.format("%.0f", Math.toDegrees(beta*1000));
+        poses[5] = String.format("%.0f", Math.toDegrees(gamma*1000));
 
         // Build message string
         return poses;

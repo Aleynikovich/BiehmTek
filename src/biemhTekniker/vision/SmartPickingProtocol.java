@@ -45,29 +45,26 @@ public class SmartPickingProtocol {
     public boolean sendCustomMessage(RoboticsAPIApplication app,LBR robot)
     {
     	
-    	try {
+    	
     		execute(Command.SET_CALIB_MODE);
-    		Thread.sleep(500);
+    		app.getApplicationControl().halt();
     		execute(Command.SEND_ROBOT_POSE);
-			Thread.sleep(500);
+    		app.getApplicationControl().halt();;
 	    	_client.sendAndReceive(String.valueOf(robot.getFlange().getX()*10), true);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(robot.getFlange().getY()*10), false);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(robot.getFlange().getZ()*10), false);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(Math.toDegrees(robot.getFlange().getGammaRad())*1000), false);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(Math.toDegrees(robot.getFlange().getBetaRad())*1000), false);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(Math.toDegrees(robot.getFlange().getAlphaRad())*1000), false);
-	    	Thread.sleep(500);
+	    	app.getApplicationControl().halt();
 	    	log.debug("Sending 5");
 	    	_client.sendAndReceive("5", true);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    	app.getApplicationControl().halt();
 
     	return true;
     	

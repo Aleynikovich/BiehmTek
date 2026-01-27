@@ -50,7 +50,7 @@ public class SmartPickingProtocol {
     		app.getApplicationControl().halt();
     		execute(Command.SEND_ROBOT_POSE);
     		app.getApplicationControl().halt();;
-	    	_client.sendAndReceive(String.valueOf(robot.getFlange().getX()*10), true);
+	    	_client.sendAndReceive(String.format("%.0f",(robot.getFlange().getX()*10)), true);
 	    	app.getApplicationControl().halt();
 	    	_client.sendAndReceive(String.valueOf(robot.getFlange().getY()*10), false);
 	    	app.getApplicationControl().halt();

@@ -232,10 +232,30 @@ public class CalibrationRoutine {
         poses[0] = String.format("%.0f", pose.getX()*10);
         poses[1] = String.format("%.0f", pose.getY()*10);
         poses[2] = String.format("%.0f", pose.getZ()*10);
-        // Convert angles: radians to millidegrees
-        poses[3] = String.format("%.0f", Math.toDegrees(pose.getAlphaRad())*1000);
-        poses[4] = String.format("%.0f", Math.toDegrees(pose.getBetaRad())*1000);
-        poses[5] = String.format("%.0f", Math.toDegrees(pose.getGammaRad())*1000);
+        
+        //Convert
+        
+        
+        double cA = Math.cos(Math.toDegrees(pose.getAlphaRad())), sA = Math.sin(Math.toDegrees(pose.getAlphaRad()));
+        double cB = Math.cos(Math.toDegrees(pose.getBetaRad())), sB = Math.sin(Math.toDegrees(pose.getBetaRad()));
+        double cC = Math.cos(Math.toDegrees(pose.getGammaRad())), sC = Math.sin(Math.toDegrees(pose.getGammaRad()));
+         
+        double[][] R = {
+            { cA*cB,  cA*sB*sC - sA*cC,  cA*sB*cC + sA*sC },
+            { sA*cB,  sA*sB*sC + cA*cC,  sA*sB*cC - cA*sC },
+            { -sB,    cB*sC,            cB*cC }
+        };
+
+         
+        double beta  = Math.asin(R[0][2]);
+        double alpha = Math.atan2(-R[1][2], R[2][2]);
+        double gamma = Math.atan2(-R[0][1], R[0][0]);
+        
+        
+        // Convert angles: radians to millidegrees     
+        poses[3] = String.format("%.0f", gamma*1000);
+        poses[4] = String.format("%.0f", beta*1000);
+        poses[5] = String.format("%.0f", alpha*1000);
 
         // Build message string
         return poses;

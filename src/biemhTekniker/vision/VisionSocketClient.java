@@ -67,8 +67,8 @@ public class VisionSocketClient {
             }
         } catch (IOException e) {
             log.error("Communication error: " + e.getMessage());
-            close();
-            return null;
+            //close();
+            return "0";
         }
     }
 

@@ -11,6 +11,7 @@ import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.ObjectFrame;
 import com.kuka.roboticsAPI.motionModel.LIN;
 
+
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.lin;
 
 /**
@@ -231,11 +232,10 @@ public class CalibrationRoutine {
         poses[0] = String.format("%.0f", pose.getX()*10);
         poses[1] = String.format("%.0f", pose.getY()*10);
         poses[2] = String.format("%.0f", pose.getZ()*10);
-
         // Convert angles: radians to millidegrees
-        poses[3] = String.format("%.0f", Math.toDegrees(pose.getGammaRad())*1000);
+        poses[3] = String.format("%.0f", Math.toDegrees(pose.getAlphaRad())*1000);
         poses[4] = String.format("%.0f", Math.toDegrees(pose.getBetaRad())*1000);
-        poses[5] = String.format("%.0f", Math.toDegrees(pose.getAlphaRad())*1000);
+        poses[5] = String.format("%.0f", Math.toDegrees(pose.getGammaRad())*1000);
 
         // Build message string
         return poses;

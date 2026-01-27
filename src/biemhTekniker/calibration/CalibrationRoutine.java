@@ -130,13 +130,18 @@ public class CalibrationRoutine {
 
         // Send robot pose to vision system
         String poseMessage = buildPoseMessage(currentPose);
-        log.debug("Sending pose: " + poseMessage);
-        VisionResult poseResult = protocol.execute(Command.SEND_ROBOT_POSE, poseMessage);
-
-        if (!poseResult.isSuccess()) {
-            log.error("Failed to send robot pose for point " + pointNumber);
-            return false;
-        }
+        //log.debug("Sending pose: " + poseMessage);
+        //TODO: Cambiar hardcode
+        //VisionResult poseResult = protocol.execute(Command.SEND_ROBOT_POSE, poseMessage);
+        poseMessage = "14";
+        
+        log.debug("sending " + poseMessage);
+        
+        
+        //if (!poseResult.isSuccess()) {
+        //    log.error("Failed to send robot pose for point " + pointNumber);
+        //    return false;
+        //}
 
         ThreadUtil.milliSleep(DELAY_MS);
 

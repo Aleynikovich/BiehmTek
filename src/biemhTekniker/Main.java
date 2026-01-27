@@ -116,6 +116,7 @@ public class Main extends RoboticsAPIApplication
       
 
         SmartPickingProtocol protocol = new SmartPickingProtocol(visionClient);
+        protocol.sendCustomMessage(this, iiwa);
 
         // Create calibration routine
         CalibrationRoutine calibration = new CalibrationRoutine(

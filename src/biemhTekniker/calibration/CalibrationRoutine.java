@@ -56,6 +56,7 @@ public class CalibrationRoutine {
      */
     public boolean executeCalibration(String calibrationPointsRoot, String testCalibrationFrame) {
         log.info("Starting calibration routine...");
+       
 
         // Set calibration mode
         if (!protocol.setMode(Command.SET_CALIB_MODE)) {
@@ -217,26 +218,17 @@ public class CalibrationRoutine {
      */
     private String buildPoseMessage(Frame pose) {
         // Convert positions: mm to tenths of mm
-        double x = pose.getX() * 10.0;
-        double y = pose.getY() * 10.0;
-        double z = pose.getZ() * 10.0;
+        double x = pose.getX();
+        double y = pose.getY();
+        double z = pose.getZ();
 
         // Convert angles: radians to millidegrees
-        double gamma = convertRadToMillidegrees(pose.getGammaRad());
-        double beta = convertRadToMillidegrees(pose.getBetaRad());
-        double alpha = convertRadToMillidegrees(pose.getAlphaRad());
+        double gamma = Math.toDegrees(pose.getGammaRad());
+        double beta = Math.toDegrees(pose.getBetaRad());
+        double alpha = Math.toDegrees(pose.getAlphaRad());
 
         // Build message string
         return String.format("%.0f;%.0f;%.0f;%.0f;%.0f;%.0f",
                 x, y, z, gamma, beta, alpha);
-    }
-
-    /**
-     * Converts an angle from radians to millidegrees.
-     * @param radians Angle in radians
-     * @return Angle in millidegrees (degrees * 1000)
-     */
-    private double convertRadToMillidegrees(double radians) {
-        return radians * 180.0 * 1000.0 / Math.PI;
     }
 }

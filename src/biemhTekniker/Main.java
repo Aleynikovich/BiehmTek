@@ -113,6 +113,7 @@ public class Main extends RoboticsAPIApplication
             log.error("Failed to connect to vision server");
             return false;
         }
+      
 
         SmartPickingProtocol protocol = new SmartPickingProtocol(visionClient);
 
